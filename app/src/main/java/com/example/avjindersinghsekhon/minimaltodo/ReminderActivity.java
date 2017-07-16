@@ -35,13 +35,9 @@ public class ReminderActivity extends AppCompatActivity{
     public static final String EXIT = "com.avjindersekhon.exit";
     private TextView mSnoozeTextView;
     String theme;
-    AnalyticsApplication app;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        app = (AnalyticsApplication)getApplication();
-        app.send(this);
-
         theme = getSharedPreferences(MainActivity.THEME_PREFERENCES, MODE_PRIVATE).getString(MainActivity.THEME_SAVED, MainActivity.LIGHTTHEME);
         if(theme.equals(MainActivity.LIGHTTHEME)){
             setTheme(R.style.CustomStyle_LightTheme);
@@ -91,7 +87,6 @@ public class ReminderActivity extends AppCompatActivity{
         mRemoveToDoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.send(this, "Action", "Todo Removed from Reminder Activity");
                 mToDoItems.remove(mItem);
                 changeOccurred();
                 saveData();
@@ -137,7 +132,6 @@ public class ReminderActivity extends AppCompatActivity{
     }
 
     private Date addTimeToDate(int mins){
-        app.send(this, "Action", "Snoozed", "For "+mins+" minutes");
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

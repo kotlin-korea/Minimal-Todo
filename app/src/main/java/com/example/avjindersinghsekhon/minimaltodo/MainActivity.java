@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String THEME_SAVED = "com.avjindersekhon.savedtheme";
     public static final String DARKTHEME = "com.avjindersekon.darktheme";
     public static final String LIGHTTHEME = "com.avjindersekon.lighttheme";
-    private AnalyticsApplication app;
     private String[] testStrings = {"Clean my room",
             "Water the plants",
             "Get car washed",
@@ -91,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        app.send(this);
 
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF_DATA_SET_CHANGED, MODE_PRIVATE);
         if(sharedPreferences.getBoolean(ReminderActivity.EXIT, false)){
@@ -123,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        app = (AnalyticsApplication)getApplication();
         super.onStart();
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF_DATA_SET_CHANGED, MODE_PRIVATE);
         if(sharedPreferences.getBoolean(CHANGE_OCCURED, false)){
@@ -160,10 +157,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void onCreate(Bundle savedInstanceState) {
-        app = (AnalyticsApplication)getApplication();
-//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-//                .setDefaultFontPath("fonts/Aller_Regular.tff").setFontAttrId(R.attr.fontPath).build());
-
         //We recover the theme we've set and setTheme accordingly
         theme = getSharedPreferences(THEME_PREFERENCES, MODE_PRIVATE).getString(THEME_SAVED, LIGHTTHEME);
 
@@ -223,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
             @SuppressWarnings("deprecation")
             @Override
             public void onClick(View v) {
-                app.send(this, "Action", "FAB pressed");
                 Intent newTodo = new Intent(MainActivity.this, AddToDoActivity.class);
                 ToDoItem item = new ToDoItem("", false, null);
                 int color = ColorGenerator.MATERIAL.getRandomColor();
@@ -442,7 +434,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemRemoved(final int position) {
             //Remove this line if not using Google Analytics
-            app.send(this, "Action", "Swiped Todo Away");
 
             mJustDeletedToDoItem =  items.remove(position);
             mIndexOfDeletedToDoItem = position;
@@ -458,7 +449,6 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(View v) {
 
                             //Comment the line below if not using Google Analytics
-                            app.send(this, "Action", "UNDO Pressed");
                             items.add(mIndexOfDeletedToDoItem, mJustDeletedToDoItem);
                             if(mJustDeletedToDoItem.getToDoDate()!=null && mJustDeletedToDoItem.hasReminder()){
                                 Intent i = new Intent(MainActivity.this, TodoNotificationService.class);
