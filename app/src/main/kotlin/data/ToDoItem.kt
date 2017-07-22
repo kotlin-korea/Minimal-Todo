@@ -2,7 +2,6 @@ package data
 
 import java.util.*
 
-
 /**
  * Created by jeonghyeonji on 2017. 7. 22..
  */
