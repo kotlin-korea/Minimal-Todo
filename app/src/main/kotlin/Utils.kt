@@ -5,9 +5,9 @@ import com.example.avjindersinghsekhon.minimaltodo.R
  * Created by jeonghyeonji on 2017. 7. 19..
  */
 class Utils {
-    companion object {
 
-        fun getToolbarHeight(context:Context):Int{
+    companion object {
+        fun getToolbarHeight(context: Context): Int {
             val styledAttributte = context.theme.obtainStyledAttributes(
                     intArrayOf(R.attr.actionBarSize)
             )
