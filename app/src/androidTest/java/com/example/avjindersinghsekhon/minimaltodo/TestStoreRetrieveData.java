@@ -26,6 +26,11 @@ package com.example.avjindersinghsekhon.minimaltodo;
 import android.content.Context;
 import android.test.ActivityUnitTestCase;
 
+import com.example.avjindersinghsekhon.minimaltodo.contract.Contract;
+import com.example.avjindersinghsekhon.minimaltodo.data.ToDoItem;
+import com.example.avjindersinghsekhon.minimaltodo.data.source.todo.StoreRetrieveData;
+import com.example.avjindersinghsekhon.minimaltodo.view.main.MainActivity;
+
 import org.json.JSONArray;
 
 import java.util.ArrayList;
@@ -164,6 +169,6 @@ public class TestStoreRetrieveData extends ActivityUnitTestCase<MainActivity> {
 
     private StoreRetrieveData getDataStorage() {
         Context context = getInstrumentation().getTargetContext();
-        return new StoreRetrieveData(context, MainActivity.FILENAME);
+        return new StoreRetrieveData(context, Contract.FILENAME);
     }
 }

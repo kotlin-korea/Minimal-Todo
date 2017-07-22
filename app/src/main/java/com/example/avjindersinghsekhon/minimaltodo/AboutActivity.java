@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.avjindersinghsekhon.minimaltodo.contract.Contract;
+
 public class AboutActivity extends AppCompatActivity {
     private TextView mVersionTextView;
     private String appVersion = "0.1";
@@ -22,8 +24,8 @@ public class AboutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        theme = getSharedPreferences(MainActivity.THEME_PREFERENCES, MODE_PRIVATE).getString(MainActivity.THEME_SAVED, MainActivity.LIGHTTHEME);
-        if(theme.equals(MainActivity.DARKTHEME)){
+        theme = getSharedPreferences(Contract.THEME_PREFERENCES, MODE_PRIVATE).getString(Contract.THEME_SAVED, Contract.LIGHT_THEME);
+        if(theme.equals(Contract.DARKTHEME)){
             Log.d("OskarSchindler", "One");
             setTheme(R.style.CustomStyle_DarkTheme);
         }
