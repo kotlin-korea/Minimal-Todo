@@ -16,10 +16,10 @@ public class ToDoItem implements Serializable{
     private UUID mTodoIdentifier;
     private static final String TODOTEXT = "todotext";
     private static final String TODOREMINDER = "todoreminder";
-//    private static final String TODOLASTEDITED = "todolastedited";
     private static final String TODOCOLOR = "todocolor";
     private static final String TODODATE = "tododate";
     private static final String TODOIDENTIFIER = "todoidentifier";
+    //    private static final String TODOLASTEDITED = "todolastedited";
 
 
     public ToDoItem(String todoBody, boolean hasReminder, Date toDoDate){
