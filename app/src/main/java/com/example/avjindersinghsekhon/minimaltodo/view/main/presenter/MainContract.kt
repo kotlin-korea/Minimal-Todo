@@ -28,7 +28,7 @@ interface MainContract {
         var adapterModel: MainModel.Model
         var adapterView: MainModel.View?
 
-        fun updateAdapterItem()
+        fun initAdapterItems()
 
         fun updateTheme()
 
@@ -37,8 +37,11 @@ interface MainContract {
         fun updatePrefRecreate(): Boolean
         fun updatePrefChangeOccuredAndItemUpdate()
 
-        fun addToDataStore(item: ToDoItem)
         fun saveToFile()
+
+
+        fun addToDataStore(item: ToDoItem)
+        fun addToDataStore(position: Int, toDoItem: ToDoItem)
 
         fun updateToDoItems(item: ToDoItem)
     }

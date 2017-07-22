@@ -11,17 +11,20 @@ interface MainModel {
 
         var onClickItem: (Int) -> Unit
         var sharedPreferences: SharedPreferences
-        var removeAt: (ToDoItem, Int) -> Unit
+        var removeAt: (Int) -> Unit
 
         fun notifyDataSetChanged()
         fun notifyItemInserted(position: Int)
+        fun notifyItemRemoved(position: Int)
     }
 
     interface Model {
 
-        fun addItem(toDoItem: ToDoItem, position: Int)
+        fun addItem(position: Int, toDoItem: ToDoItem)
         fun addItem(toDoItem: ToDoItem)
 
         fun getItem(position: Int): ToDoItem
+        fun removeItem(toDoItem: ToDoItem)
+        fun removeItemAt(position: Int): ToDoItem
     }
 }

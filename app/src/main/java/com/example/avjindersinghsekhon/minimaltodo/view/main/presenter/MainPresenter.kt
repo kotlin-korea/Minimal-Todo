@@ -1,7 +1,6 @@
 package com.example.avjindersinghsekhon.minimaltodo.view.main.presenter
 
 import android.content.Context
-import android.util.Log
 import com.example.avjindersinghsekhon.minimaltodo.R
 import com.example.avjindersinghsekhon.minimaltodo.ReminderActivity
 import com.example.avjindersinghsekhon.minimaltodo.base.presenter.CommonPresenter
@@ -28,23 +27,66 @@ class MainPresenter(val context: Context) : CommonPresenter<MainContract.View>()
                 view?.showAddToActivity(adapterModel.getItem(it))
             }
             field?.removeAt = {
-                toDoItem, position ->
-                view?.showRemoveItem(toDoItem, position)
+                position ->
+                adapterView?.notifyItemRemoved(position)
+                view?.showRemoveItem(removeToDataStore(position), position)
             }
         }
 
-    private var toDoItemsArrayList: ArrayList<ToDoItem>? = null
-        get() = getLocallyStoredData()
+    private val toDoItemsArrayList: ArrayList<ToDoItem> by lazy {
+        try {
+            storeRetrieveData.loadFromFile()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            java.util.ArrayList<ToDoItem>()
+        } catch (e: JSONException) {
+            e.printStackTrace()
+            java.util.ArrayList<ToDoItem>()
+        }
+    }
 
     override val theme: String by lazy {
         context.getSharedPreferences(Contract.THEME_PREFERENCES, Context.MODE_PRIVATE).getString(Contract.THEME_SAVED, Contract.LIGHT_THEME)
     }
 
-    override fun updateAdapterItem() {
-        toDoItemsArrayList?.forEach {
+    override fun initAdapterItems() {
+        toDoItemsArrayList.forEach {
             adapterModel.addItem(it)
         }
         adapterView?.notifyDataSetChanged()
+    }
+
+    private fun removeToDataStore(position: Int): ToDoItem {
+        toDoItemsArrayList.removeAt(position)
+        return adapterModel.removeItemAt(position)
+    }
+
+    override fun addToDataStore(item: ToDoItem) {
+        addToDataStore(toDoItemsArrayList.size, item)
+    }
+
+    override fun addToDataStore(position: Int, toDoItem: ToDoItem) {
+        adapterModel.addItem(position, toDoItem)
+        toDoItemsArrayList.add(position, toDoItem)
+        adapterView?.notifyItemInserted(position)
+    }
+
+    override fun updateToDoItems(item: ToDoItem) {
+        var existed = false
+        toDoItemsArrayList.forEachIndexed { index, toDoItem ->
+            if (item.identifier == toDoItem.identifier) {
+                toDoItemsArrayList.remove(toDoItem)
+                toDoItemsArrayList.add(index, item)
+                adapterModel.removeItem(toDoItem)
+                adapterModel.addItem(index, item)
+                existed = true
+                adapterView?.notifyDataSetChanged()
+            }
+        }
+
+        if (!existed) {
+            addToDataStore(item)
+        }
     }
 
     override fun updatePrefChangeOccured() {
@@ -80,7 +122,7 @@ class MainPresenter(val context: Context) : CommonPresenter<MainContract.View>()
     override fun updatePrefChangeOccuredAndItemUpdate() {
         context.getSharedPreferences(Contract.SHARED_PREF_DATA_SET_CHANGED, Context.MODE_PRIVATE).apply {
             if (getBoolean(Contract.CHANGE_OCCURED, false)) {
-                toDoItemsArrayList?.forEach {
+                toDoItemsArrayList.forEach {
                     view?.setAlarms(it)
                 }
                 edit().apply {
@@ -99,12 +141,6 @@ class MainPresenter(val context: Context) : CommonPresenter<MainContract.View>()
         }
     }
 
-    override fun addToDataStore(item: ToDoItem) {
-        toDoItemsArrayList?.add(item)
-        adapterModel.addItem(item)
-        adapterView?.notifyItemInserted(toDoItemsArrayList?.size ?: 1 - 1)
-    }
-
     override fun saveToFile() {
         try {
             storeRetrieveData.saveToFile(toDoItemsArrayList)
@@ -113,29 +149,5 @@ class MainPresenter(val context: Context) : CommonPresenter<MainContract.View>()
         } catch (e: IOException) {
 
         }
-    }
-
-    // TODO Bug...
-    override fun updateToDoItems(item: ToDoItem) {
-        var existed = false
-        toDoItemsArrayList?.forEachIndexed { index, toDoItem ->
-            if (item.identifier == toDoItem.identifier) {
-                toDoItemsArrayList?.add(index, item)
-                existed = true
-                adapterView?.notifyDataSetChanged()
-            }
-        }
-
-        if (!existed) {
-            addToDataStore(item)
-        }
-    }
-
-    private fun getLocallyStoredData() = try {
-        storeRetrieveData.loadFromFile()
-    } catch (e: IOException) {
-        java.util.ArrayList<ToDoItem>()
-    } catch (e: JSONException) {
-        java.util.ArrayList<ToDoItem>()
     }
 }

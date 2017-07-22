@@ -78,6 +78,9 @@ class MainActivity : BasePresenterActivity<MainContract.View, MainContract.Prese
 
         itemTouchHelper = ItemTouchHelper(ItemTouchHelperClass(mainAdapter))
         itemTouchHelper.attachToRecyclerView(toDoRecyclerView)
+
+        // 최초 목록 갱신
+        presenter.initAdapterItems()
     }
 
     private val customRecyclerScrollViewListener = object : CustomRecyclerScrollViewListener() {
@@ -105,20 +108,18 @@ class MainActivity : BasePresenterActivity<MainContract.View, MainContract.Prese
     override fun showRemoveItem(toDoItem: ToDoItem, position: Int) {
         val intent = Intent(this@MainActivity, TodoNotificationService::class.java)
         deleteAlarm(intent, toDoItem.identifier.hashCode())
-        mainAdapter.notifyItemRemoved(position)
 
         val toShow = "Todo"
         Snackbar.make(myCoordinatorLayout, "Deleted " + toShow, Snackbar.LENGTH_SHORT)
                 .setAction("UNDO") {
                     //Comment the line below if not using Google Analytics
-                    presenter.adapterModel.addItem(toDoItem, position)
+                    presenter.addToDataStore(position, toDoItem)
                     if (toDoItem.hasReminder()) {
                         val i = Intent(this@MainActivity, TodoNotificationService::class.java)
                         i.putExtra(TodoNotificationService.TODOTEXT, toDoItem.toDoText)
                         i.putExtra(TodoNotificationService.TODOUUID, toDoItem.identifier)
                         createAlarm(i, toDoItem.identifier.hashCode(), toDoItem.toDoDate.time)
                     }
-                    mainAdapter.notifyItemInserted(position)
                 }.show()
     }
 
@@ -163,7 +164,6 @@ class MainActivity : BasePresenterActivity<MainContract.View, MainContract.Prese
         super.onStart()
 
         presenter.updatePrefChangeOccuredAndItemUpdate()
-        presenter.updateAdapterItem()
     }
 
     override fun setAlarms(item: ToDoItem) {

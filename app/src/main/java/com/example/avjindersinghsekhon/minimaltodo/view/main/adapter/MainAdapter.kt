@@ -21,7 +21,7 @@ class MainAdapter(val context: Context) : RecyclerView.Adapter<MainViewHolder>()
     override lateinit var sharedPreferences: SharedPreferences
 
     // todo 제거 필요(onTouch 변경 후 제거)
-    override lateinit var removeAt: (ToDoItem, Int) -> Unit
+    override lateinit var removeAt: (Int) -> Unit
 
 
     private val todoList = mutableListOf<ToDoItem>()
@@ -48,16 +48,22 @@ class MainAdapter(val context: Context) : RecyclerView.Adapter<MainViewHolder>()
     }
 
     override fun onItemRemoved(position: Int) {
-        removeAt(todoList.removeAt(position), position)
+        removeAt(position)
     }
 
     override fun getItem(position: Int) = todoList[position]
 
-    override fun addItem(toDoItem: ToDoItem, position: Int) {
+    override fun addItem(position: Int, toDoItem: ToDoItem) {
         todoList.add(position, toDoItem)
     }
 
     override fun addItem(toDoItem: ToDoItem) {
         todoList.add(toDoItem)
+    }
+
+    override fun removeItemAt(position: Int) = todoList.removeAt(position)
+
+    override fun removeItem(toDoItem: ToDoItem) {
+        todoList.remove(toDoItem)
     }
 }
