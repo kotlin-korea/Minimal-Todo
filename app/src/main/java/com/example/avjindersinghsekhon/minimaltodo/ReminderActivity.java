@@ -14,6 +14,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.avjindersinghsekhon.minimaltodo.contract.Contract;
+import com.example.avjindersinghsekhon.minimaltodo.data.ToDoItem;
+import com.example.avjindersinghsekhon.minimaltodo.data.source.todo.StoreRetrieveData;
+import com.example.avjindersinghsekhon.minimaltodo.view.main.MainActivity;
+
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -36,10 +41,29 @@ public class ReminderActivity extends AppCompatActivity{
     private TextView mSnoozeTextView;
     String theme;
 
+    // todo 제거 필요
+    // kotlin 변환으로 인해 해당 부분 로직 변경
+    public ArrayList<ToDoItem> getLocallyStoredData(StoreRetrieveData storeRetrieveData){
+        ArrayList<ToDoItem> items = null;
+
+        try {
+            items  = storeRetrieveData.loadFromFile();
+
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+        if(items == null){
+            items = new ArrayList<>();
+        }
+        return items;
+
+    }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        theme = getSharedPreferences(MainActivity.THEME_PREFERENCES, MODE_PRIVATE).getString(MainActivity.THEME_SAVED, MainActivity.LIGHTTHEME);
-        if(theme.equals(MainActivity.LIGHTTHEME)){
+        theme = getSharedPreferences(Contract.THEME_PREFERENCES, MODE_PRIVATE).getString(Contract.THEME_SAVED, Contract.LIGHT_THEME);
+        if(theme.equals(Contract.LIGHT_THEME)){
             setTheme(R.style.CustomStyle_LightTheme);
         }
         else{
@@ -47,8 +71,8 @@ public class ReminderActivity extends AppCompatActivity{
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reminder_layout);
-        storeRetrieveData = new StoreRetrieveData(this, MainActivity.FILENAME);
-        mToDoItems = MainActivity.getLocallyStoredData(storeRetrieveData);
+        storeRetrieveData = new StoreRetrieveData(this, Contract.FILENAME);
+        mToDoItems = getLocallyStoredData(storeRetrieveData);
 
         setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
 
@@ -74,7 +98,7 @@ public class ReminderActivity extends AppCompatActivity{
 //        mtoDoTextTextView.setBackgroundColor(item.getTodoColor());
         mtoDoTextTextView.setText(mItem.getToDoText());
 
-        if(theme.equals(MainActivity.LIGHTTHEME)){
+        if(theme.equals(Contract.LIGHT_THEME)){
             mSnoozeTextView.setTextColor(getResources().getColor(R.color.secondary_text));
         }
         else{
@@ -110,7 +134,7 @@ public class ReminderActivity extends AppCompatActivity{
         Intent i = new Intent(ReminderActivity.this, MainActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //        i.putExtra(EXIT, true);
-        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_DATA_SET_CHANGED, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Contract.SHARED_PREF_DATA_SET_CHANGED, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(EXIT, true);
         editor.apply();
@@ -124,9 +148,9 @@ public class ReminderActivity extends AppCompatActivity{
         return true;
     }
     private void changeOccurred(){
-        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_DATA_SET_CHANGED, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Contract.SHARED_PREF_DATA_SET_CHANGED, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(MainActivity.CHANGE_OCCURED, true);
+        editor.putBoolean(Contract.CHANGE_OCCURED, true);
 //        editor.commit();
         editor.apply();
     }

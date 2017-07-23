@@ -1,4 +1,4 @@
-package com.example.avjindersinghsekhon.minimaltodo;
+package com.example.avjindersinghsekhon.minimaltodo.data;
 
 import org.json.JSONException;
 import org.json.JSONObject;

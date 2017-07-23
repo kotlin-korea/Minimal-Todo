@@ -26,6 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.avjindersinghsekhon.minimaltodo.contract.Contract;
+import com.example.avjindersinghsekhon.minimaltodo.data.ToDoItem;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -78,8 +80,8 @@ public class AddToDoActivity extends AppCompatActivity implements  DatePickerDia
         TextView reminderRemindMeTextView;
 
 
-        theme = getSharedPreferences(MainActivity.THEME_PREFERENCES, MODE_PRIVATE).getString(MainActivity.THEME_SAVED, MainActivity.LIGHTTHEME);
-        if(theme.equals(MainActivity.LIGHTTHEME)){
+        theme = getSharedPreferences(Contract.THEME_PREFERENCES, MODE_PRIVATE).getString(Contract.THEME_SAVED, Contract.LIGHT_THEME);
+        if(theme.equals(Contract.LIGHT_THEME)){
             setTheme(R.style.CustomStyle_LightTheme);
             Log.d("OskarSchindler", "Light Theme");
         }
@@ -110,7 +112,7 @@ public class AddToDoActivity extends AppCompatActivity implements  DatePickerDia
         }
 
 
-        mUserToDoItem = (ToDoItem)getIntent().getSerializableExtra(MainActivity.TODOITEM);
+        mUserToDoItem = (ToDoItem)getIntent().getSerializableExtra(Contract.TODO_ITEM);
 
         mUserEnteredText = mUserToDoItem.getToDoText();
         mUserHasReminder = mUserToDoItem.hasReminder();
@@ -128,7 +130,7 @@ public class AddToDoActivity extends AppCompatActivity implements  DatePickerDia
 
         reminderIconImageButton = (ImageButton)findViewById(R.id.userToDoReminderIconImageButton);
         reminderRemindMeTextView = (TextView)findViewById(R.id.userToDoRemindMeTextView);
-        if(theme.equals(MainActivity.DARKTHEME)){
+        if(theme.equals(Contract.DARKTHEME)){
             reminderIconImageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_alarm_add_white_24dp));
             reminderRemindMeTextView.setTextColor(Color.WHITE);
         }
@@ -252,7 +254,7 @@ public class AddToDoActivity extends AppCompatActivity implements  DatePickerDia
 
 
                 DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(AddToDoActivity.this, year, month, day);
-                if(theme.equals(MainActivity.DARKTHEME)){
+                if(theme.equals(Contract.DARKTHEME)){
                     datePickerDialog.setThemeDark(true);
                 }
                 datePickerDialog.show(getFragmentManager(), "DateFragment");
@@ -280,7 +282,7 @@ public class AddToDoActivity extends AppCompatActivity implements  DatePickerDia
                 int minute = calendar.get(Calendar.MINUTE);
 
                 TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(AddToDoActivity.this, hour, minute, DateFormat.is24HourFormat(AddToDoActivity.this));
-                if(theme.equals(MainActivity.DARKTHEME)){
+                if(theme.equals(Contract.DARKTHEME)){
                     timePickerDialog.setThemeDark(true);
                 }
                 timePickerDialog.show(getFragmentManager(), "TimeFragment");
@@ -411,7 +413,7 @@ public class AddToDoActivity extends AppCompatActivity implements  DatePickerDia
     }
 
     private String getThemeSet(){
-        return getSharedPreferences(MainActivity.THEME_PREFERENCES, MODE_PRIVATE).getString(MainActivity.THEME_SAVED, MainActivity.LIGHTTHEME);
+        return getSharedPreferences(Contract.THEME_PREFERENCES, MODE_PRIVATE).getString(Contract.THEME_SAVED, Contract.LIGHT_THEME);
     }
     public void hideKeyboard(EditText et){
 
@@ -546,7 +548,7 @@ public class AddToDoActivity extends AppCompatActivity implements  DatePickerDia
         mUserToDoItem.setHasReminder(mUserHasReminder);
         mUserToDoItem.setToDoDate(mUserReminderDate);
         mUserToDoItem.setTodoColor(mUserColor);
-        i.putExtra(MainActivity.TODOITEM, mUserToDoItem);
+        i.putExtra(Contract.TODO_ITEM, mUserToDoItem);
         setResult(result, i);
     }
 

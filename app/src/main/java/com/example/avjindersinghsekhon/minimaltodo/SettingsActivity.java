@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.example.avjindersinghsekhon.minimaltodo.contract.Contract;
+
 public class SettingsActivity extends AppCompatActivity{
 
     @Override
@@ -20,8 +22,8 @@ public class SettingsActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        String theme = getSharedPreferences(MainActivity.THEME_PREFERENCES, MODE_PRIVATE).getString(MainActivity.THEME_SAVED, MainActivity.LIGHTTHEME);
-        if(theme.equals(MainActivity.LIGHTTHEME)){
+        String theme = getSharedPreferences(Contract.THEME_PREFERENCES, MODE_PRIVATE).getString(Contract.THEME_SAVED, Contract.LIGHT_THEME);
+        if(theme.equals(Contract.LIGHT_THEME)){
             setTheme(R.style.CustomStyle_LightTheme);
         }
         else{

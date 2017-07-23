@@ -4,6 +4,10 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import com.example.avjindersinghsekhon.minimaltodo.contract.Contract;
+import com.example.avjindersinghsekhon.minimaltodo.data.ToDoItem;
+import com.example.avjindersinghsekhon.minimaltodo.data.source.todo.StoreRetrieveData;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -19,7 +23,7 @@ public class DeleteNotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        storeRetrieveData = new StoreRetrieveData(this, MainActivity.FILENAME);
+        storeRetrieveData = new StoreRetrieveData(this, Contract.FILENAME);
         UUID todoID = (UUID)intent.getSerializableExtra(TodoNotificationService.TODOUUID);
 
         mToDoItems = loadData();
@@ -42,9 +46,9 @@ public class DeleteNotificationService extends IntentService {
     }
 
     private void dataChanged(){
-        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_DATA_SET_CHANGED, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Contract.SHARED_PREF_DATA_SET_CHANGED, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(MainActivity.CHANGE_OCCURED, true);
+        editor.putBoolean(Contract.CHANGE_OCCURED, true);
         editor.apply();
     }
 
