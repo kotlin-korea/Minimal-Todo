@@ -11,7 +11,7 @@ class Utils {
         @JvmStatic fun getToolbarHeight(context: Context): Int {
             val styledAttributes = context.theme.obtainStyledAttributes(
                     intArrayOf(R.attr.actionBarSize))
-            var toolbarHeight = styledAttributes.getDimension(0, 0f).toInt()
+            val toolbarHeight = styledAttributes.getDimension(0, 0f).toInt()
             styledAttributes.recycle()
 
             return toolbarHeight
