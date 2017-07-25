@@ -4,6 +4,8 @@ import android.app.IntentService
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import org.json.JSONException
+import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -12,41 +14,38 @@ import kotlin.collections.ArrayList
  */
 class DeleteNotificationService : IntentService {
 
-    private var storeRetrieveData : StoreRetrieveData? = null
-    private var mToDoItems : ArrayList<ToDoItem?>? = null
-    private var mItem : ToDoItem? = null
+    private var storeRetrieveData   : StoreRetrieveData?    = null
+    private var mToDoItems          : ArrayList<ToDoItem?>? = null
+    private var mItem               : ToDoItem?             = null
+
 
     constructor() : super("DeleteNotificationService")
 
 
+
     override fun onHandleIntent(intent : Intent?) {
-        storeRetrieveData = StoreRetrieveData(this, MainActivity.FILENAME)
-        val todoID: UUID = intent?.getSerializableExtra(TodoNotificationService.TODOUUID) as UUID
 
-        mToDoItems = loadData()
+        val todoID: UUID    = intent?.getSerializableExtra(TodoNotificationService.TODOUUID) as UUID
 
-        if (mToDoItems != null) {
-            for (item: ToDoItem? in mToDoItems.orEmpty()) {
-                if( item?.identifier!!.equals(todoID)){
-                    mItem = item
-                    break
-                }
-            }
+        storeRetrieveData   = StoreRetrieveData(this, MainActivity.FILENAME)
+        mToDoItems          = loadData()
+        mItem               = mToDoItems!!.filter { item -> item?.identifier!! == todoID }.singleOrNull()
 
-            if( mItem != null ){
-                mToDoItems?.remove(mItem)
-                dataChanged()
-                saveData()
-            }
+        mItem?.let {
+            mToDoItems!!.remove(mItem)
+            dataChanged()
+            saveData()
         }
     }
 
 
+
     private fun dataChanged(){
-        val sharedPreferences : SharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_DATA_SET_CHANGED, Context.MODE_PRIVATE)
-        val editor : SharedPreferences.Editor = sharedPreferences.edit()
-        editor.putBoolean(MainActivity.CHANGE_OCCURED, true)
-        editor.apply()
+
+        baseContext.getSharedPreferences(MainActivity.SHARED_PREF_DATA_SET_CHANGED, Context.MODE_PRIVATE).edit().run {
+            putBoolean(MainActivity.CHANGE_OCCURED, true)
+        }.apply()
+
     }
 
 
@@ -69,16 +68,29 @@ class DeleteNotificationService : IntentService {
 
 
 
+    private fun loadData() : ArrayList<ToDoItem?>{
 
+        var loadData : ArrayList<ToDoItem?> = ArrayList<ToDoItem?>(0)
 
-    private fun loadData() : ArrayList<ToDoItem?>?{
         try{
-            return storeRetrieveData?.loadFromFile()
-        }
-        catch( e : Exception){
-            e.printStackTrace()
+            loadData = storeRetrieveData!!.loadFromFile()
+
+            if( loadData == null )
+                throw KotlinNullPointerException()
         }
 
-        return null
+        catch( e : Exception){
+
+            when(e){
+                is KotlinNullPointerException,
+                is JSONException,
+                is IOException -> {
+                    e.printStackTrace()
+                }
+                else -> throw e
+            }
+        }
+
+        return loadData
     }
 }
