@@ -21,18 +21,16 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
         val preferenceKeys = PreferenceKeys(resources)
         if(key == preferenceKeys.night_mode_pref_key) {
             val themePreferences = activity.getSharedPreferences(MainActivity.THEME_PREFERENCES, Context.MODE_PRIVATE)
-            val themeEditor = themePreferences.edit()
-            //We tell our MainLayout to recreate itself because mode has changed
-            themeEditor.putBoolean(MainActivity.RECREATE_ACTIVITY, true)
-
-            val checkBoxPreference  = findPreference(preferenceKeys.night_mode_pref_key) as CheckBoxPreference
-            if(checkBoxPreference.isChecked) {
-                themeEditor.putString(MainActivity.THEME_SAVED, MainActivity.DARKTHEME)
-            } else {
-                themeEditor.putString(MainActivity.THEME_SAVED, MainActivity.LIGHTTHEME)
+            themePreferences.edit().apply {
+                //We tell our MainLayout to recreate itself because mode has changed
+                putBoolean(MainActivity.RECREATE_ACTIVITY, true)
+                val checkBoxPreference  = findPreference(preferenceKeys.night_mode_pref_key) as CheckBoxPreference
+                if(checkBoxPreference.isChecked)
+                    putString(MainActivity.THEME_SAVED, MainActivity.DARKTHEME)
+                else
+                    putString(MainActivity.THEME_SAVED, MainActivity.LIGHTTHEME)
+                apply()
             }
-            themeEditor.apply()
-
             activity.recreate()
         }
     }
