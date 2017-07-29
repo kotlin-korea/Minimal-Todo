@@ -54,7 +54,7 @@ class ReminderActivity : AppCompatActivity() {
             setTheme(R.style.CustomStyle_DarkTheme)
         }
 
-        super.onCreate(savedInstanceState)
+        super.onCreate(sav edInstanceState)
         setContentView(R.layout.reminder_layout)
         mToDoItems = MainActivity.getLocallyStoredData(storeRetrieveData)
         setSupportActionBar(toolbar)
@@ -73,8 +73,9 @@ class ReminderActivity : AppCompatActivity() {
 
 
         // 자바스러운거 아닌가요.. 찜ㅂ찜......
-        if (theme == MainActivity.LIGHTTHEME) mSnoozeTextView.textColors = resources.getColor(R.color.secondary_text)
-        else {
+        if (theme == MainActivity.LIGHTTHEME) {
+            mSnoozeTextView.textColors = resources.getColor(R.color.secondary_text)
+        } else {
             //  mSnoozeTextView.textColors = Color.WHITE 요렇게 하고싶은데 말이죠.. error..위에랑 다른데 뭐지..
             mSnoozeTextView.setTextColor(Color.WHITE)
             mSnoozeTextView.setCompoundDrawablesWithIntrinsicBounds(
@@ -84,8 +85,8 @@ class ReminderActivity : AppCompatActivity() {
 
         mRdemoveToDoButton.setOnClickListener {
             mToDoItems.remove(mItem)
+            saveData()
 //            changeOccurred()
-//            saveData()
 //            closeApp()
         }
 
@@ -97,13 +98,19 @@ class ReminderActivity : AppCompatActivity() {
     }
 
     private fun saveData() {
-        /*try {
+        try {
             storeRetrieveData.saveToFile(mToDoItems)
             // 좋은 코틀 표현식 없나요
             //java 1.7 추가 multiple catch : (JSONException | IOException e)
-        } catch (e: JSONException && e: IOException) {
-            e.printStackTrace()
-        }*/
+        } catch (e: Exception) {
+            when (e) {
+                is JSONException,
+                is IOException -> {
+                    e.printStackTrace()
+                }
+                else -> throw e
+            }
+        }
     }
 
     override fun onDestroy() {
