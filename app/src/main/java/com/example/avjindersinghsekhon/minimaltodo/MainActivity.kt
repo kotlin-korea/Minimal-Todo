@@ -38,7 +38,7 @@ import java.io.IOException
 import java.util.Collections
 import java.util.Date
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private var mRecyclerView: RecyclerViewEmptySupport? = null
     private var mAddToDoItemFAB: FloatingActionButton? = null
     private var mToDoItemsArrayList : MutableList<ToDoItem> = ArrayList<ToDoItem>(0)
@@ -54,11 +54,8 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        val sharedPreferences = getSharedPreferences(SHARED_PREF_DATA_SET_CHANGED, Context.MODE_PRIVATE)
-        if (sharedPreferences.getBoolean(ReminderActivity.EXIT, false)) {
-            val editor = sharedPreferences.edit()
-            editor.putBoolean(ReminderActivity.EXIT, false)
-            editor.apply()
+        if (getPref(SHARED_PREF_DATA_SET_CHANGED, ReminderActivity.EXIT)) {
+            setPref(SHARED_PREF_DATA_SET_CHANGED, ReminderActivity.EXIT, false)
             finish()
         }
         /*
@@ -72,32 +69,21 @@ class MainActivity : AppCompatActivity() {
         and get an ANR
 
          */
-        if (getSharedPreferences(THEME_PREFERENCES, Context.MODE_PRIVATE).getBoolean(RECREATE_ACTIVITY, false)) {
-            val editor = getSharedPreferences(THEME_PREFERENCES, Context.MODE_PRIVATE).edit()
-            editor.putBoolean(RECREATE_ACTIVITY, false)
-            editor.apply()
+        if (getPref(THEME_PREFERENCES, RECREATE_ACTIVITY)) {
             recreate()
+            setPref(THEME_PREFERENCES, RECREATE_ACTIVITY, false)
         }
-
-
     }
 
     override fun onStart() {
         super.onStart()
-        val sharedPreferences = getSharedPreferences(SHARED_PREF_DATA_SET_CHANGED, Context.MODE_PRIVATE)
-        if (sharedPreferences.getBoolean(CHANGE_OCCURED, false)) {
-
+        if (getPref(SHARED_PREF_DATA_SET_CHANGED, CHANGE_OCCURED)) {
             mToDoItemsArrayList = getLocallyStoredData(storeRetrieveData!!)
             adapter = BasicListAdapter(mToDoItemsArrayList)
             mRecyclerView!!.adapter = adapter
             setAlarms()
 
-            val editor = sharedPreferences.edit()
-            editor.putBoolean(CHANGE_OCCURED, false)
-            //            editor.commit();
-            editor.apply()
-
-
+            setPref(SHARED_PREF_DATA_SET_CHANGED, CHANGE_OCCURED, false)
         }
     }
 
@@ -118,21 +104,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //We recover the theme we've set and setTheme accordingly
-        val theme = getSharedPreferences(THEME_PREFERENCES, Context.MODE_PRIVATE).getString(THEME_SAVED, LIGHTTHEME)
-
-        this.setTheme(
-                if (theme == LIGHTTHEME) R.style.CustomStyle_LightTheme
-                else R.style.CustomStyle_DarkTheme)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        val sharedPreferences = getSharedPreferences(SHARED_PREF_DATA_SET_CHANGED, Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putBoolean(CHANGE_OCCURED, false)
-        editor.apply()
+        setPref(SHARED_PREF_DATA_SET_CHANGED, CHANGE_OCCURED, false)
 
         storeRetrieveData = StoreRetrieveData(this, FILENAME)
         mToDoItemsArrayList = getLocallyStoredData(storeRetrieveData!!)
@@ -174,7 +149,7 @@ class MainActivity : AppCompatActivity() {
         //        mRecyclerView = (RecyclerView)findViewById(R.id.toDoRecyclerView);
         mRecyclerView = findViewById(R.id.toDoRecyclerView) as RecyclerViewEmptySupport
         mRecyclerView?.apply {
-            if (theme == LIGHTTHEME) {
+            if (getThemeString() == LIGHTTHEME) {
                 setBackgroundColor(resources.getColor(R.color.primary_lightest))
             }
             setEmptyView(this@MainActivity.findViewById(R.id.toDoEmptyView))
@@ -325,12 +300,12 @@ class MainActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: BasicListAdapter.ViewHolder, position: Int) {
             val item = items[position]
-            val sharedPreferences = getSharedPreferences(THEME_PREFERENCES, Context.MODE_PRIVATE)
+
             //Background color for each to-do item. Necessary for night/day mode
             val bgColor: Int
             //color of title text in our to-do item. White for night mode, dark gray for day mode
             val todoTextColor: Int
-            if (sharedPreferences.getString(THEME_SAVED, LIGHTTHEME) == LIGHTTHEME) {
+            if (getThemeString() == LIGHTTHEME) {
                 bgColor = Color.WHITE
                 todoTextColor = resources.getColor(R.color.secondary_text)
             } else {
