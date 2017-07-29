@@ -39,16 +39,16 @@ import java.util.Collections
 import java.util.Date
 
 class MainActivity : BaseActivity() {
-    private var mRecyclerView: RecyclerViewEmptySupport? = null
-    private var mAddToDoItemFAB: FloatingActionButton? = null
+    private lateinit var mRecyclerView: RecyclerViewEmptySupport
+    private lateinit var mAddToDoItemFAB: FloatingActionButton
     private var mToDoItemsArrayList : MutableList<ToDoItem> = ArrayList<ToDoItem>(0)
-    private var mCoordLayout: CoordinatorLayout? = null
-    private var adapter: BasicListAdapter? = null
+    private lateinit var mCoordLayout: CoordinatorLayout
+    private lateinit var adapter: BasicListAdapter
     private var mJustDeletedToDoItem: ToDoItem? = null
     private var mIndexOfDeletedToDoItem: Int = 0
-    private var storeRetrieveData: StoreRetrieveData? = null
-    var itemTouchHelper: ItemTouchHelper? = null
-    private var customRecyclerScrollViewListener: CustomRecyclerScrollViewListener? = null
+    private lateinit var storeRetrieveData: StoreRetrieveData
+    lateinit var itemTouchHelper: ItemTouchHelper
+    private lateinit var customRecyclerScrollViewListener: CustomRecyclerScrollViewListener
     private val testStrings = arrayOf("Clean my room", "Water the plants", "Get car washed", "Get my dry cleaning")
 
     override fun onResume() {
@@ -78,9 +78,9 @@ class MainActivity : BaseActivity() {
     override fun onStart() {
         super.onStart()
         if (getPref(SHARED_PREF_DATA_SET_CHANGED, CHANGE_OCCURED)) {
-            mToDoItemsArrayList = getLocallyStoredData(storeRetrieveData!!)
+            mToDoItemsArrayList = getLocallyStoredData(storeRetrieveData)
             adapter = BasicListAdapter(mToDoItemsArrayList)
-            mRecyclerView!!.adapter = adapter
+            mRecyclerView.adapter = adapter
             setAlarms()
 
             setPref(SHARED_PREF_DATA_SET_CHANGED, CHANGE_OCCURED, false)
@@ -110,7 +110,7 @@ class MainActivity : BaseActivity() {
         setPref(SHARED_PREF_DATA_SET_CHANGED, CHANGE_OCCURED, false)
 
         storeRetrieveData = StoreRetrieveData(this, FILENAME)
-        mToDoItemsArrayList = getLocallyStoredData(storeRetrieveData!!)
+        mToDoItemsArrayList = getLocallyStoredData(storeRetrieveData)
         adapter = BasicListAdapter(mToDoItemsArrayList)
         setAlarms()
 
@@ -120,7 +120,7 @@ class MainActivity : BaseActivity() {
         mCoordLayout = findViewById(R.id.myCoordinatorLayout) as CoordinatorLayout
         mAddToDoItemFAB = findViewById(R.id.addToDoItemFAB) as FloatingActionButton
 
-        mAddToDoItemFAB!!.setOnClickListener {
+        mAddToDoItemFAB.setOnClickListener {
             val newTodo = Intent(this@MainActivity, AddToDoActivity::class.java)
             val item = ToDoItem("", false, null)
             val color = ColorGenerator.MATERIAL.randomColor
@@ -134,21 +134,21 @@ class MainActivity : BaseActivity() {
         customRecyclerScrollViewListener = object : CustomRecyclerScrollViewListener() {
             override fun show() {
 
-                mAddToDoItemFAB!!.animate().translationY(0f).setInterpolator(DecelerateInterpolator(2f)).start()
+                mAddToDoItemFAB.animate().translationY(0f).setInterpolator(DecelerateInterpolator(2f)).start()
                 //                mAddToDoItemFAB.animate().translationY(0).setInterpolator(new AccelerateInterpolator(2.0f)).start();
             }
 
             override fun hide() {
 
-                val lp = mAddToDoItemFAB!!.layoutParams as CoordinatorLayout.LayoutParams
+                val lp = mAddToDoItemFAB.layoutParams as CoordinatorLayout.LayoutParams
                 val fabMargin = lp.bottomMargin
-                mAddToDoItemFAB!!.animate().translationY((mAddToDoItemFAB!!.height + fabMargin).toFloat()).setInterpolator(AccelerateInterpolator(2.0f)).start()
+                mAddToDoItemFAB.animate().translationY((mAddToDoItemFAB.height + fabMargin).toFloat()).setInterpolator(AccelerateInterpolator(2.0f)).start()
             }
         }
 
         //        mRecyclerView = (RecyclerView)findViewById(R.id.toDoRecyclerView);
         mRecyclerView = findViewById(R.id.toDoRecyclerView) as RecyclerViewEmptySupport
-        mRecyclerView?.apply {
+        mRecyclerView.apply {
             if (getThemeString() == LIGHTTHEME) {
                 setBackgroundColor(resources.getColor(R.color.primary_lightest))
             }
@@ -160,7 +160,7 @@ class MainActivity : BaseActivity() {
 
             val callback = ItemTouchHelperClass(this@MainActivity.adapter)
             itemTouchHelper = ItemTouchHelper(callback)
-            itemTouchHelper!!.attachToRecyclerView(this)
+            itemTouchHelper.attachToRecyclerView(this)
 
             adapter = this@MainActivity.adapter
             //        setUpTransitions();
@@ -208,9 +208,9 @@ class MainActivity : BaseActivity() {
 
             mToDoItemsArrayList.filter {
                 item.identifier == it.identifier
-            }.first()?.let {
+            }.firstOrNull()?.let {
                 existed = true
-                adapter!!.notifyDataSetChanged()
+                adapter.notifyDataSetChanged()
             }
             if (!existed) {
                 addToDataStore(item)
@@ -244,7 +244,7 @@ class MainActivity : BaseActivity() {
 
     private fun addToDataStore(item: ToDoItem) {
         mToDoItemsArrayList.add(item)
-        adapter!!.notifyItemInserted(mToDoItemsArrayList.size - 1)
+        adapter.notifyItemInserted(mToDoItemsArrayList.size - 1)
 
     }
 
@@ -274,7 +274,7 @@ class MainActivity : BaseActivity() {
 
             //            String toShow = (mJustDeletedToDoItem.getToDoText().length()>20)?mJustDeletedToDoItem.getToDoText().substring(0, 20)+"...":mJustDeletedToDoItem.getToDoText();
             val toShow = "Todo"
-            Snackbar.make(mCoordLayout!!, "Deleted " + toShow, Snackbar.LENGTH_SHORT)
+            Snackbar.make(mCoordLayout, "Deleted " + toShow, Snackbar.LENGTH_SHORT)
                     .setAction("UNDO") {
                         //Comment the line below if not using Google Analytics
                         mJustDeletedToDoItem?.let {
@@ -374,7 +374,7 @@ class MainActivity : BaseActivity() {
 
     private fun saveDate() {
         try {
-            storeRetrieveData!!.saveToFile(java.util.ArrayList<ToDoItem>(mToDoItemsArrayList))
+            storeRetrieveData.saveToFile(java.util.ArrayList<ToDoItem>(mToDoItemsArrayList))
         } catch (e: Exception) {
             when (e) {
                 is JSONException,
@@ -393,7 +393,7 @@ class MainActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mRecyclerView!!.removeOnScrollListener(customRecyclerScrollViewListener)
+        mRecyclerView.removeOnScrollListener(customRecyclerScrollViewListener)
     }
 
     companion object {
