@@ -88,19 +88,19 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setAlarms() {
-        for (item in mToDoItemsArrayList) {
-            if (item.hasReminder() && item.toDoDate != null) {
-                if (item.toDoDate.before(Date())) {
-                    item.toDoDate = null
-                    continue
-                }
+        val today = Date()
+        mToDoItemsArrayList.filter {
+            it.hasReminder() && it.toDoDate != null
+        }.forEach {
+            if (it.toDoDate.before(today)) {
+                it.toDoDate = null
+            } else {
                 val i = Intent(this, TodoNotificationService::class.java)
-                i.putExtra(TodoNotificationService.TODOUUID, item.identifier)
-                        .putExtra(TodoNotificationService.TODOTEXT, item.toDoText)
-                createAlarm(i, item.identifier.hashCode(), item.toDoDate.time)
+                i.putExtra(TodoNotificationService.TODOUUID, it.identifier)
+                        .putExtra(TodoNotificationService.TODOTEXT, it.toDoText)
+                createAlarm(i, it.identifier.hashCode(), it.toDoDate.time)
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -206,13 +206,11 @@ class MainActivity : BaseActivity() {
                 //                Log.d("OskarSchindler", "Alarm Created: "+item.getToDoText()+" at "+item.getToDoDate());
             }
 
-            for (i in mToDoItemsArrayList.indices) {
-                if (item.identifier == mToDoItemsArrayList[i].identifier) {
-                    mToDoItemsArrayList[i] = item
-                    existed = true
-                    adapter!!.notifyDataSetChanged()
-                    break
-                }
+            mToDoItemsArrayList.filter {
+                item.identifier == it.identifier
+            }.first()?.let {
+                existed = true
+                adapter!!.notifyDataSetChanged()
             }
             if (!existed) {
                 addToDataStore(item)
