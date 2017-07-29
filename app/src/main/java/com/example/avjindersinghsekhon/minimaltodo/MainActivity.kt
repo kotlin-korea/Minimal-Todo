@@ -139,26 +139,6 @@ class MainActivity : AppCompatActivity() {
         adapter = BasicListAdapter(mToDoItemsArrayList)
         setAlarms()
 
-
-        //        adapter.notifyDataSetChanged();
-        //        storeRetrieveData = new StoreRetrieveData(this, FILENAME);
-        //
-        //        try {
-        //            mToDoItemsArrayList = storeRetrieveData.loadFromFile();
-        ////            Log.d("OskarSchindler", "Arraylist Length: "+mToDoItemsArrayList.size());
-        //        } catch (IOException | JSONException e) {
-        ////            Log.d("OskarSchindler", "IOException received");
-        //            e.printStackTrace();
-        //        }
-        //
-        //        if(mToDoItemsArrayList==null){
-        //            mToDoItemsArrayList = new ArrayList<>();
-        //        }
-        //
-
-        //        mToDoItemsArrayList = new ArrayList<>();
-        //        makeUpItems(mToDoItemsArrayList, testStrings.length);
-
         val toolbar = findViewById(R.id.toolbar) as android.support.v7.widget.Toolbar
         setSupportActionBar(toolbar)
 
@@ -171,29 +151,7 @@ class MainActivity : AppCompatActivity() {
             val color = ColorGenerator.MATERIAL.randomColor
             item.todoColor = color
 
-            //                String color = getResources().getString(R.color.primary_ligher);
             newTodo.putExtra(TODOITEM, item)
-            //                View decorView = getWindow().getDecorView();
-            //                View navView= decorView.findViewById(android.R.id.navigationBarBackground);
-            //                View statusView = decorView.findViewById(android.R.id.statusBarBackground);
-            //                Pair<View, String> navBar ;
-            //                if(navView!=null){
-            //                    navBar = Pair.create(navView, navView.getTransitionName());
-            //                }
-            //                else{
-            //                    navBar = null;
-            //                }
-            //                Pair<View, String> statusBar= Pair.create(statusView, statusView.getTransitionName());
-            //                ActivityOptions options;
-            //                if(navBar!=null){
-            //                    options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, navBar, statusBar);
-            //                }
-            //                else{
-            //                    options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, statusBar);
-            //                }
-
-            //                startActivity(new Intent(MainActivity.this, TestLayout.class), options.toBundle());
-            //                startActivityForResult(newTodo, REQUEST_ID_TODO_ITEM, options.toBundle());
 
             startActivityForResult(newTodo, REQUEST_ID_TODO_ITEM)
         }
@@ -234,13 +192,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun addThemeToSharedPreferences(theme: String) {
-        val sharedPreferences = getSharedPreferences(THEME_PREFERENCES, Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString(THEME_SAVED, theme)
-        editor.apply()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -253,22 +204,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(i)
                 return true
             }
-        //            case R.id.switch_themes:
-        //                if(mTheme == R.style.CustomStyle_DarkTheme){
-        //                    addThemeToSharedPreferences(LIGHTTHEME);
-        //                }
-        //                else{
-        //                    addThemeToSharedPreferences(DARKTHEME);
-        //                }
-        //
-        ////                if(mTheme == R.style.CustomStyle_DarkTheme){
-        ////                    mTheme = R.style.CustomStyle_LightTheme;
-        ////                }
-        ////                else{
-        ////                    mTheme = R.style.CustomStyle_DarkTheme;
-        ////                }
-        //                this.recreate();
-        //                return true;
+
             R.id.preferences -> {
                 val intent = Intent(this, SettingsActivity::class.java)
                 startActivity(intent)
@@ -389,9 +325,6 @@ class MainActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: BasicListAdapter.ViewHolder, position: Int) {
             val item = items[position]
-            //            if(item.getToDoDate()!=null && item.getToDoDate().before(new Date())){
-            //                item.setToDoDate(null);
-            //            }
             val sharedPreferences = getSharedPreferences(THEME_PREFERENCES, Context.MODE_PRIVATE)
             //Background color for each to-do item. Necessary for night/day mode
             val bgColor: Int
@@ -416,16 +349,6 @@ class MainActivity : AppCompatActivity() {
             }
             holder.mToDoTextview.text = item.toDoText
             holder.mToDoTextview.setTextColor(todoTextColor)
-            //            holder.mColorTextView.setBackgroundColor(Color.parseColor(item.getTodoColor()));
-
-            //            TextDrawable myDrawable = TextDrawable.builder().buildRoundRect(item.getToDoText().substring(0,1),Color.RED, 10);
-            //We check if holder.color is set or not
-            //            if(item.getTodoColor() == null){
-            //                ColorGenerator generator = ColorGenerator.MATERIAL;
-            //                int color = generator.getRandomColor();
-            //                item.setTodoColor(color+"");
-            //            }
-            //            Log.d("OskarSchindler", "Color: "+item.getTodoColor());
             val myDrawable = TextDrawable.builder().beginConfig()
                     .textColor(Color.WHITE)
                     .useFont(Typeface.DEFAULT)
@@ -444,14 +367,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 holder.mTimeTextView.text = timeToShow
             }
-
-
         }
 
         override fun getItemCount(): Int {
             return items.size
         }
-
 
         inner class ViewHolder
         //            int color = -1;
@@ -476,16 +396,8 @@ class MainActivity : AppCompatActivity() {
                 mColorImageView = mView.findViewById<View>(R.id.toDoListItemColorImageView) as ImageView
                 linearLayout = mView.findViewById<View>(R.id.listItemLinearLayout) as LinearLayout
             }
-
-
         }
     }
-
-    //Used when using custom fonts
-    //    @Override
-    //    protected void attachBaseContext(Context newBase) {
-    //        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    //    }
 
     private fun saveDate() {
         try {
@@ -506,9 +418,7 @@ class MainActivity : AppCompatActivity() {
         saveDate()
     }
 
-
     override fun onDestroy() {
-
         super.onDestroy()
         mRecyclerView!!.removeOnScrollListener(customRecyclerScrollViewListener)
     }
@@ -539,25 +449,4 @@ class MainActivity : AppCompatActivity() {
             return ArrayList<ToDoItem>(0)
         }
     }
-
-
-    //    public void setUpTransitions(){
-    //        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-    //            Transition enterT = new Slide(Gravity.RIGHT);
-    //            enterT.setDuration(500);
-    //
-    //            Transition exitT = new Slide(Gravity.LEFT);
-    //            exitT.setDuration(300);
-    //
-    //            Fade fade = new Fade();
-    //            fade.setDuration(500);
-    //
-    //            getWindow().setExitTransition(fade);
-    //            getWindow().setReenterTransition(fade);
-    //
-    //        }
-    //    }
-
 }
-
-
