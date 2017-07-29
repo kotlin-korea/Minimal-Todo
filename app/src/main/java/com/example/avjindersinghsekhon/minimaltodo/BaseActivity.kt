@@ -21,8 +21,22 @@ open class BaseActivity : AppCompatActivity() {
         return getPref(MainActivity.THEME_PREFERENCES,
                 MainActivity.THEME_SAVED, MainActivity.LIGHTTHEME)
     }
+
+
+
 }
 
 fun Context.getPref(name: String, key: String, def: String ): String {
     return this.getSharedPreferences(name, Context.MODE_PRIVATE).getString(key, def)
+}
+
+fun Context.getPref(name: String, key: String, def: Boolean = false ): Boolean {
+    return this.getSharedPreferences(name, Context.MODE_PRIVATE).getBoolean(key, def)
+}
+
+fun Context.setPref(name: String, key: String, value: Boolean) {
+    this.getSharedPreferences(name, Context.MODE_PRIVATE).edit().apply {
+        putBoolean(key, value)
+        apply()
+    }
 }
