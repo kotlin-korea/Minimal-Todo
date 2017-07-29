@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private RecyclerViewEmptySupport mRecyclerView;
     private FloatingActionButton mAddToDoItemFAB;
     private ArrayList<ToDoItem> mToDoItemsArrayList;
@@ -157,17 +157,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void onCreate(Bundle savedInstanceState) {
-        //We recover the theme we've set and setTheme accordingly
-        theme = getSharedPreferences(THEME_PREFERENCES, MODE_PRIVATE).getString(THEME_SAVED, LIGHTTHEME);
-
-        if(theme.equals(LIGHTTHEME)){
-            mTheme = R.style.CustomStyle_LightTheme;
-        }
-        else{
-            mTheme = R.style.CustomStyle_DarkTheme;
-        }
-        this.setTheme(mTheme);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -252,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        mRecyclerView = (RecyclerView)findViewById(R.id.toDoRecyclerView);
         mRecyclerView = (RecyclerViewEmptySupport)findViewById(R.id.toDoRecyclerView);
-        if(theme.equals(LIGHTTHEME)){
+        if(getThemeString().equals(LIGHTTHEME)){
             mRecyclerView.setBackgroundColor(getResources().getColor(R.color.primary_lightest));
         }
         mRecyclerView.setEmptyView(findViewById(R.id.toDoEmptyView));
@@ -473,12 +462,12 @@ public class MainActivity extends AppCompatActivity {
 //            if(item.getToDoDate()!=null && item.getToDoDate().before(new Date())){
 //                item.setToDoDate(null);
 //            }
-            SharedPreferences sharedPreferences = getSharedPreferences(THEME_PREFERENCES, MODE_PRIVATE);
+
             //Background color for each to-do item. Necessary for night/day mode
             int bgColor;
             //color of title text in our to-do item. White for night mode, dark gray for day mode
             int todoTextColor;
-            if(sharedPreferences.getString(THEME_SAVED, LIGHTTHEME).equals(LIGHTTHEME)){
+            if(getThemeString().equals(LIGHTTHEME)){
                 bgColor = Color.WHITE;
                 todoTextColor = getResources().getColor(R.color.secondary_text);
             }
