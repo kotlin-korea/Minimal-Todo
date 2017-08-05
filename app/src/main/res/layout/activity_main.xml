@@ -10,8 +10,7 @@
             android:id="@+id/myCoordinatorLayout"
             android:layout_width="match_parent"
             android:gravity="center"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
         <FrameLayout
             android:id="@+id/toDoFrame"
@@ -19,51 +18,47 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <LinearLayout
-            android:id="@+id/toDoEmptyView"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:src="@drawable/empty_view_bg"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
-            <TextView
-                android:text="@string/no_to_dos"
-                android:textColor="@color/secondary_text"
-                android:textSize="16sp"
-                android:paddingTop="4dp"
-                android:paddingBottom="8dp"
+            <LinearLayout
+                android:id="@+id/toDoEmptyView"
+                android:orientation="vertical"
                 android:gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent">
 
-        </LinearLayout>
+                <ImageView
+                    android:src="@drawable/empty_view_bg"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp" />
+                <TextView
+                    android:text="@string/no_to_dos"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="16sp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="8dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </FrameLayout>
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:elevation="0dp"
-            android:elevation="0dp"
-            >
+            android:elevation="0dp">
 
             <include layout="@layout/base_toolbar"/>
         </android.support.design.widget.AppBarLayout>
 
-            <!--<include layout="@layout/base_toolbar"/>-->
+        <!--<include layout="@layout/base_toolbar"/>-->
 
-
-        <!--</android.support.design.widget.AppBarLayout>-->
-
-
-            <com.example.avjindersinghsekhon.minimaltodo.RecyclerViewEmptySupport
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:id="@+id/toDoRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </FrameLayout>
+        <com.example.avjindersinghsekhon.minimaltodo.RecyclerViewEmptySupport
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:id="@+id/toDoRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
 
         <android.support.design.widget.FloatingActionButton
