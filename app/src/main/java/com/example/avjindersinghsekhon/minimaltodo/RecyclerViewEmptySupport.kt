@@ -9,7 +9,7 @@ import android.view.View
  * Created by hardyeats on 2017-07-31.
  */
 
-class RecyclerViewEmptySupport : RecyclerView {
+class RecyclerViewEmptySupport @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyle: Int = 0) : RecyclerView(context, attrs, defStyle) {
 
     private var emptyView: View? = null
 
@@ -26,10 +26,6 @@ class RecyclerViewEmptySupport : RecyclerView {
             showEmptyView()
         }
     }
-
-    constructor(context: Context?) : super(context)
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
     fun showEmptyView() {
         if(adapter != null && emptyView != null) {
