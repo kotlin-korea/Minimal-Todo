@@ -24,7 +24,7 @@ import java.util.UUID;
 
 import fr.ganfra.materialspinner.MaterialSpinner;
 
-public class ReminderActivity extends AppCompatActivity{
+public class ReminderActivity extends BaseActivity{
     private TextView mtoDoTextTextView;
     private Button mRemoveToDoButton;
     private MaterialSpinner mSnoozeSpinner;
@@ -34,17 +34,9 @@ public class ReminderActivity extends AppCompatActivity{
     private ToDoItem mItem;
     public static final String EXIT = "com.avjindersekhon.exit";
     private TextView mSnoozeTextView;
-    String theme;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        theme = getSharedPreferences(MainActivity.THEME_PREFERENCES, MODE_PRIVATE).getString(MainActivity.THEME_SAVED, MainActivity.LIGHTTHEME);
-        if(theme.equals(MainActivity.LIGHTTHEME)){
-            setTheme(R.style.CustomStyle_LightTheme);
-        }
-        else{
-            setTheme(R.style.CustomStyle_DarkTheme);
-        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reminder_layout);
         storeRetrieveData = new StoreRetrieveData(this, MainActivity.FILENAME);
@@ -74,7 +66,7 @@ public class ReminderActivity extends AppCompatActivity{
 //        mtoDoTextTextView.setBackgroundColor(item.getTodoColor());
         mtoDoTextTextView.setText(mItem.getToDoText());
 
-        if(theme.equals(MainActivity.LIGHTTHEME)){
+        if(getThemeString().equals(MainActivity.LIGHTTHEME)){
             mSnoozeTextView.setTextColor(getResources().getColor(R.color.secondary_text));
         }
         else{
