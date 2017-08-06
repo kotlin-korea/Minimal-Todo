@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-public class SettingsActivity extends AppCompatActivity{
+public class SettingsActivity extends BaseActivity{
 
     @Override
     protected void onResume() {
@@ -19,14 +19,6 @@ public class SettingsActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        String theme = getSharedPreferences(MainActivity.THEME_PREFERENCES, MODE_PRIVATE).getString(MainActivity.THEME_SAVED, MainActivity.LIGHTTHEME);
-        if(theme.equals(MainActivity.LIGHTTHEME)){
-            setTheme(R.style.CustomStyle_LightTheme);
-        }
-        else{
-            setTheme(R.style.CustomStyle_DarkTheme);
-        }
         super.onCreate(savedInstanceState);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_settings);

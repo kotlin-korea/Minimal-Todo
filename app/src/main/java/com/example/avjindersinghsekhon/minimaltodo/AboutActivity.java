@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends BaseActivity {
     private TextView mVersionTextView;
     private String appVersion = "0.1";
     private Toolbar toolbar;
@@ -22,16 +22,6 @@ public class AboutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        theme = getSharedPreferences(MainActivity.THEME_PREFERENCES, MODE_PRIVATE).getString(MainActivity.THEME_SAVED, MainActivity.LIGHTTHEME);
-        if(theme.equals(MainActivity.DARKTHEME)){
-            Log.d("OskarSchindler", "One");
-            setTheme(R.style.CustomStyle_DarkTheme);
-        }
-        else{
-            Log.d("OskarSchindler", "One");
-            setTheme(R.style.CustomStyle_LightTheme);
-        }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_layout);
         
